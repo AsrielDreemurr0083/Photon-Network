@@ -39,6 +39,6 @@ public class PopUpManager : MonoBehaviour
             }
         }
 
-        popUpList.Add(Instantiate(Resources.Load<GameObject>(popUpName)));
+        popUpList.Add(Instantiate(Resources.Load<GameObject>(popUpName),gameObject.transform.GetChild(0)));
     }
 }

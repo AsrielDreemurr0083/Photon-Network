@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
+    [SerializeField] Dropdown dropdown;
     [SerializeField] Canvas lobbyCanvas;
-
 
     private void Awake()
     {
@@ -33,7 +33,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         (
             new TypedLobby
             (
-                "Defalut",LobbyType.Default 
+                dropdown.options[dropdown.value].text,
+                LobbyType.Default
             )
         );
     }

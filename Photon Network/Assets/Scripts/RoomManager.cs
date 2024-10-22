@@ -14,7 +14,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private Dictionary<string,RoomInfo> dictionary = new Dictionary<string,RoomInfo>();
 
-    public override void OnJoinedLobby()
+    public override void OnJoinedRoom()
     {
         PhotonNetwork.LoadLevel("Game");
     }

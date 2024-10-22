@@ -5,29 +5,43 @@ using Photon.Pun;
 
 [RequireComponent(typeof(Move))]
 [RequireComponent (typeof(Rotation))]
-
+[RequireComponent(typeof (Rigidbody))]
 public class Character : MonoBehaviourPun
 {
     [SerializeField] Move move;
     [SerializeField] Camera remoteCamera;
     [SerializeField] Rotation rotation;
-
+    [SerializeField] Rigidbody rigidBody;
     private void Awake()
     {
         move = GetComponent<Move>();
         rotation = GetComponent<Rotation>();
+        rigidBody = GetComponent<Rigidbody>();
     }
     void Start()
     {
         DisableCamera();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        move.Movement();
-        rotation.RotateY();
+        rotation.InputRotateY();
     }
+
+    public void FixedUpdate()
+    {
+        move.Movement(rigidBody);
+
+        rotation.RotateY(rigidBody);
+    }
+
+    // Update is called once per frame
+    //void Update()
+    //{
+    //    move.Movement();
+    //    rotation.RotateY();
+    //    rotation.RotateX();
+    //}
 
     public void DisableCamera()
     {

@@ -12,7 +12,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [SerializeField] InputField roomCapacityInputField;
     [SerializeField] Transform contentTransform;
 
-    private Dictionary<string,RoomInfo> dictionary = new Dictionary<string,RoomInfo>();
+    private Dictionary<string,GameObject> dictionary = new Dictionary<string,GameObject>();
 
     public override void OnJoinedRoom()
     {
@@ -34,30 +34,46 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        // 룸 삭제
+        GameObject temporaryRoom;
 
-        // 룸 업데이트
+        foreach(RoomInfo room in roomList) 
+        {
+            if(room.RemovedFromList == true)
+            {
+                dictionary.TryGetValue(room.Name, out temporaryRoom);
 
-        // 룸 생성
-        InstantiateRoom();
+                Destroy(temporaryRoom);
 
-    }
+                dictionary.Remove(room.Name);
+            }
+            else
+            {
+                if(dictionary.ContainsKey(room.Name) == false)
+                {
+                    GameObject roomObject = Instantiate(Resources.Load<GameObject>("Room"), contentTransform);
 
-    public void InstantiateRoom()
-    {
-        foreach(RoomInfo roomInfo in dictionary.Values)
-        {           
-            // 1. room 오브젝트를 생성한다.
-            GameObject room = Instantiate(Resources.Load<GameObject>("Room"));
-            // 2. room 오브젝트의 위치 값을 설정한다.
-            room.transform.SetParent(contentTransform);
-            // 3. room 오브젝트 안에 있는 Text 속성을 설정.
-            room.GetComponent<Information>().SetData
-            (
-                roomInfo.Name,
-                roomInfo.PlayerCount,
-                roomInfo.MaxPlayers
-            );
+                    roomObject.GetComponent<Information>().SetData(room.Name, room.PlayerCount, room.MaxPlayers);
+
+                    roomObject.GetComponent<Information>().SetData
+                    (
+                        room.Name,
+                        room.PlayerCount,
+                        room.MaxPlayers
+                    );
+                    dictionary.Add(room.Name, roomObject);
+                }
+                else
+                {
+                    dictionary.TryGetValue(room.Name, out temporaryRoom);
+
+                    temporaryRoom.GetComponent<Information>().SetData
+                    (
+                        room.Name,
+                        room.PlayerCount, 
+                        room.MaxPlayers
+                    );
+                }
+            }
         }
     }
 
